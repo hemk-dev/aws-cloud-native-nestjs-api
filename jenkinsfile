@@ -6,7 +6,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '10'))
     timestamps()
   }
-
   stages {
     stage('Deploy') {
       steps {
