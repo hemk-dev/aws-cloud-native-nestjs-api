@@ -1,0 +1,105 @@
+@baseUrl = http://localhost:5000
+
+# Replace this with a real UUID after creating a task
+@taskId = fccf6fcf-e0b1-4e66-91d0-c627719462ee
+
+### ===========================
+### Health Endpoints
+### ===========================
+
+### Health Check
+GET {{baseUrl}}/health/check
+
+### Metrics
+GET {{baseUrl}}/health/metrics
+
+### ===========================
+### Tasks CRUD Endpoints
+### ===========================
+
+### Create Task - minimal (title only)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "My first task"
+}
+
+### Create Task - full payload
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Deploy to AWS",
+  "description": "Set up ECS Fargate deployment pipeline",
+  "status": "OPEN"
+}
+
+### Create Task - IN_PROGRESS status
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Write unit tests",
+  "description": "Add tests for tasks service",
+  "status": "IN_PROGRESS"
+}
+
+### Get All Tasks
+GET {{baseUrl}}/tasks
+
+### Get Task by ID
+GET {{baseUrl}}/tasks/{{taskId}}
+
+### Update Task - change status to DONE
+PATCH {{baseUrl}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
+
+### Update Task - change title and description
+PATCH {{baseUrl}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "title": "Updated task title - Deploy to AWS"
+}
+
+### Delete Task
+DELETE {{baseUrl}}/tasks/{{taskId}}
+
+### ===========================
+### Validation Error Tests
+### ===========================
+
+### Create Task - empty body (should fail validation)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{}
+
+### Create Task - invalid status (should fail validation)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Bad task",
+  "status": "INVALID_STATUS"
+}
+
+### Create Task - extra field (should fail: forbidNonWhitelisted)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task with extra field",
+  "priority": "high"
+}
+
+### Get Task - invalid UUID (should fail ParseUUIDPipe)
+GET {{baseUrl}}/tasks/not-a-uuid
+
+### Get Task - non-existent UUID (should return 404)
+GET {{baseUrl}}/tasks/00000000-0000-0000-0000-000000000000
