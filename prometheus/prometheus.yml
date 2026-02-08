@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'nestjs-api-monitor'
+
+# Alertmanager configuration (optional - can be added later)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ['alertmanager:9093']
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "alert_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # NestJS Application
+  - job_name: 'nestjs-api'
+    metrics_path: '/metrics'
+    static_configs:
+      # Try host.docker.internal first (works on Docker Desktop Windows)
+      # If that doesn't work, try: 172.17.0.1 (Docker bridge gateway) or your host IP
+      - targets: ['host.docker.internal:5000']
+        labels:
+          service: 'nestjs-api'
+          environment: 'production'
+
+  # Node Exporter for EC2 system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          instance: 'ec2-instance'
+          service: 'node-exporter'

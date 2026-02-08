@@ -41,7 +41,8 @@ async function bootstrap() {
 
   await app.listen(port);
   logger.log(`Application running on port ${port}`);
+  logger.log(`Metrics endpoint available at http://localhost:${port}/metrics`);
   logger.log('Helmet enabled – X-Powered-By header removed');
-  logger.log('Rate limiting active – 10 req / min per IP');
+  logger.log('Rate limiting active – 10 req / min per IP (metrics endpoint excluded)');
 }
 bootstrap();

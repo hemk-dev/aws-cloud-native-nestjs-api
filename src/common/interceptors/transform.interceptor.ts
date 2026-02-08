@@ -19,6 +19,12 @@ export class TransformInterceptor<T>
   ): Observable<IApiResponse<T>> {
     const ctx = context.switchToHttp();
     const request = ctx.getRequest<Request>();
+    
+    // Skip transformation for metrics endpoint (Prometheus needs plain text)
+    if (request.url === '/metrics' || request.url.startsWith('/metrics')) {
+      return next.handle() as Observable<any>;
+    }
+    
     const statusCode = ctx.getResponse().statusCode;
 
     return next.handle().pipe(

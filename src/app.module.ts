@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
 import { HealthModule } from './health/health.module';
 import { TasksModule } from './tasks/tasks.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TasksModule } from './tasks/tasks.module';
     TypeOrmModule.forRootAsync(databaseConfig),
     HealthModule,
     TasksModule,
+    MetricsModule,
   ],
   providers: [
     // Apply ThrottlerGuard globally to all routes
